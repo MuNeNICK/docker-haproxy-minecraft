@@ -1,6 +1,6 @@
 FROM haproxy:latest
 
-ENV HAPROXY_USER root
+ENV HAPROXY_USER haproxy
 
 RUN groupadd --system ${HAPROXY_USER} && \
   useradd --system --gid ${HAPROXY_USER} ${HAPROXY_USER} && \
