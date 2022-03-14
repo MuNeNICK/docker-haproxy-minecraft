@@ -2,7 +2,7 @@ version: '3'
  
 services:
   haproxy:
-    image: haproxy:latest
+    image: haproxy:latest-alpine
     ports:
       - "80:80/tcp"
       - "25565:25565/tcp"
