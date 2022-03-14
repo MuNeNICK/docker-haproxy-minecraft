@@ -2,7 +2,8 @@ version: '3'
  
 services:
   haproxy:
-    image: haproxy:2.5.4-alpine
+    build:
+    restart: always
     ports:
       - "80:80/tcp"
       - "25565:25565/tcp"
