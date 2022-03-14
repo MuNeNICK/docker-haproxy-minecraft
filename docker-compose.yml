@@ -1,17 +1,8 @@
-version: '3.3'
-  
-networks:
-  haproxy-network:
-    external: false
-
+version: '3'
+ 
 services:
   haproxy:
-    build: .
-    restart: always
-    environment:
-      - TZ=Asia/Tokyo
-    networks:
-      - haproxy-network
+    image: haproxy:latest
     ports:
       - "80:80/tcp"
       - "25565:25565/tcp"
