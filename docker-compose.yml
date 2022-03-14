@@ -8,4 +8,4 @@ services:
       - "80:80/tcp"
       - "25565:25565/tcp"
     volumes:
-      - ./haproxy.cfg.default:/usr/local/etc/haproxy/haproxy.cfg
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
