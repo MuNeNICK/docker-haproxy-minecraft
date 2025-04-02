@@ -5,7 +5,6 @@ services:
     build: .
     restart: always
     ports:
-      - 80:80
       - 25565:25565
     volumes:
       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
