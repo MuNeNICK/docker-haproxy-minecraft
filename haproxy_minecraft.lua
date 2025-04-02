@@ -94,7 +94,7 @@ local function payload_read_string(payload, max_prefix_bytes, max_utf8_len)
         -- fast-fail (illegal str_len / missing data)
         return false
     end
-    local str = string_sub(payload[1], payload[2], payload[2] + str_len)
+    local str = string_sub(payload[1], payload[2], payload[2] + str_len - 1)
     payload[2] = payload[2] + str_len
     return str
 end
@@ -108,6 +108,7 @@ end
 local function read_mc_handshake(payload)
     if (payload[1] == nil) then
         -- skip (missing data)
+        core.log(core.info, "NO DATA: Payload is empty")
         return
     end
 
@@ -115,17 +116,22 @@ local function read_mc_handshake(payload)
     local packet_len = payload_read_varint(payload, 2, true)
     if (packet_len == nil) then
         -- skip (missing data)
+        core.log(core.info, "INSUFFICIENT DATA: Cannot read packet length")
         return
     end
     -- note: (packet_len)2 + (packet_id)1 + (protocol_version)4 + (hostname)2+255 + (port)2 + (state)1 = 267
     if (packet_len == -1 or packet_len > 267) then
         -- fast-fail (too long handshake packet)
+        core.log(core.warning, string.format("INVALID PACKET LENGTH: %d", packet_len))
         return false
     end
     if (packet_len > payload_readable_len(payload)) then
         -- skip (missing data)
+        core.log(core.info, string.format("INSUFFICIENT DATA: Packet length=%d, Readable data=%d", packet_len, payload_readable_len(payload)))
         return
     end
+
+    core.log(core.info, string.format("PACKET LENGTH: %d", packet_len))
 
     -- read packet id
     local packet_id = payload_read_varint(payload, 1, false)
@@ -173,16 +179,21 @@ end
 -- * txn.mc_host  - The target hostname string; or empty on error
 -- * txn.mc_state - The target state number; or 0 on error
 local function mc_handshake(txn)
+    core.log(core.info, "START: Processing Minecraft handshake")
     local res, proto, host, state = read_mc_handshake({ txn.req:dup(), 1 })
+    
     if (res == nil) then
         -- skip (missing data)
+        core.log(core.info, "INSUFFICIENT DATA: Handshake packet is incomplete")
     elseif (res == false) then
         -- failed
+        core.log(core.warning, "FAILED: Could not decode handshake packet")
         txn:set_var('txn.mc_proto', 0)
         txn:set_var('txn.mc_host', '')
         txn:set_var('txn.mc_state', 0)
     else
         -- succeed
+        core.log(core.info, string.format("SUCCESS: Protocol=%d, Host=%s, State=%d", proto, host, state))
         txn:set_var('txn.mc_proto', proto)
         txn:set_var('txn.mc_host', host)
         txn:set_var('txn.mc_state', state)
