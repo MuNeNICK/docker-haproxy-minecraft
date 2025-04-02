@@ -1,4 +1,4 @@
-## Minecraftのサーバをドメイン・サブドメインでプロキシする用のHAProxyです
+## Minecraftのサーバをドメインでプロキシする用のHAProxy
 
 ### 概要
 このリポジトリではHAProxyを使用して、ドメイン名やサブドメイン名に基づいてマインクラフトサーバーへのトラフィックをルーティングするための設定を提供します。複数のマインクラフトサーバーを単一のポート（25565）で管理することができます。
@@ -59,10 +59,10 @@ server minecraft1_srv 192.168.100.200:25565
 バックエンド設定の例：
 ```
 backend minecraft1_flg
-  server minecraft1_srv サーバ1のIPアドレス
+  server minecraft1_srv 192.168.100.100:25565
 
 backend minecraft2_flg
-  server minecraft2_srv サーバ2のIPアドレス
+  server minecraft2_srv 192.168.100.200:25565
 ```
 
 ### 注意事項
