@@ -9,4 +9,5 @@ services:
       - 25565:25565
     volumes:
       - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg
+      - ./haproxy_minecraft.lua:/usr/local/etc/haproxy/haproxy_minecraft.lua
       
